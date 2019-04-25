@@ -1,29 +1,65 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+     <Navigation/>
+     <Alert v-if="seen" @close-alert="closeModal" @openModal="showModal = true"/>
+     <Modal :show="showModal" @close="closeModal" />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+
+import Navigation from './components/Nav';
+import Alert from './components/Alert';
+import Modal from './components/UI/Modal';
+
+export default {
+  name: 'home',
+  data () {
+  return {
+    seen: true,
+    showModal: false,
+  }
+},
+  methods: {
+    closeModal(){
+      if(this.showModal){
+        this.showModal=false
+      }
+      this.seen=false;
+      localStorage.setItem( 'ClosedAlert', true );
     }
+  },
+
+// Saving state of targeting alert on local storage 
+  created(){
+    let alerted = localStorage.getItem('ClosedAlert') ;
+    if (alerted) {
+      this.seen =  false
+    }
+  },
+
+  components: {
+    Navigation,
+    Alert,
+    Modal
   }
 }
+</script>
+
+<style lang="scss">
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #fff;
+}
+
+
 </style>
